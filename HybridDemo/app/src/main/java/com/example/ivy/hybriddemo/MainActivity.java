@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         mWebView.getSettings().setJavaScriptEnabled(true);
 
-        mWebView.addJavascriptInterface(person = new Person(),"person");
+        mWebView.addJavascriptInterface(person = new Person(), "person");
 
         mWebView.setWebChromeClient(new MyWebChromeClient());
 
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         String url = "http://192.168.1.4:8080/demo1.html";
         mWebView.loadUrl(url);
 
-        mWebView.setWebViewClient(new WebViewClient(){
+        mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
@@ -52,70 +52,92 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    class MyWebChromeClient extends WebChromeClient{
+    class MyWebChromeClient extends WebChromeClient {
         @Override
         public boolean onConsoleMessage(ConsoleMessage cm) {
-            Log.d("main",cm.message());
+            Log.d("main", cm.message());
             return true;
         }
 
         @Override
         public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
-            Toast.makeText(MainActivity.this,message,Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
             return true;
         }
     }
-  public   class Person{
+
+    public class Person {
         public String name;
         public String age;
+        public String phone;
 
 
         @JavascriptInterface
-        public void setName(String name){
+        public void setName(String name) {
             this.name = name;
 
             handler.post(new Runnable() {
                 @Override
                 public void run() {
+                    mWebView.addJavascriptInterface(person, "person");
                     mWebView.loadUrl("http://192.168.1.4:8080/demo2.html");
                 }
             });
+            Log.d("main", "setName");
 
         }
 
         @JavascriptInterface
-        public void setAge(String age){
+        public void setAge(String age) {
             this.age = age;
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mWebView.loadUrl("http://192.168.1.4:8080/demoresult.html");
+//                    mWebView.addJavascriptInterface(person,"person");
+                    mWebView.loadUrl("http://192.168.1.4:8080/demo3.html");
                 }
             });
+
+            Log.d("main", "setAge");
         }
 
 
         @JavascriptInterface
-        public void getResult(String age){
+        public void setPhone(String phone) {
+            this.phone = phone;
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+//                  mWebView.addJavascriptInterface(person,"person");
+                    mWebView.loadUrl("http://192.168.1.4:8080/demoresult.html");
+                }
+            });
 
+            Log.d("main", "setPhone");
+        }
+
+        @JavascriptInterface
+        public void getResult() {
+            Log.d("main", "getResult");
 
             try {
 
                 JSONArray array = new JSONArray();
                 JSONObject personObj = new JSONObject();
-                personObj.put("name",name);
-                personObj.put("age",age);
+                personObj.put("name", name);
+                personObj.put("age", age);
+                personObj.put("phone", phone);
 
                 array.put(personObj);
-                final String result =  array.toString();
+                final String result = array.toString();
 
-                Log.d("json",result);
+                Log.d("main", result);
 
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        mWebView.loadUrl("javascript:show('"+result+"'");
+                        mWebView.loadUrl("javascript:show('" + result + "')");
                     }
                 });
 
