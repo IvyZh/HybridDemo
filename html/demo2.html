@@ -1,0 +1,22 @@
+<html> 
+<head> 
+请输入你的年龄！
+	
+	</br>
+<input type="text" id="123">
+<input type="button" value="Click me!" onclick="alerting();"/>
+<Script Language="JavaScript"> 
+	function alerting(){ 
+	var content = "";
+	content=window.document.getElementById("123").value;
+		if(content.length<1){
+			alert("no content!"); 
+		}else{
+			//alert(content); 
+			window.person.setAge(content);
+		}
+	}
+
+</Script> 
+</head> 
+</html> 
