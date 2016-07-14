@@ -1,7 +1,7 @@
 # HybridDemo
 Android和Html5混合式开发
 
-Html代码：
+Html代码：（在html文件夹中）
 
 <html> 
 <head> 
